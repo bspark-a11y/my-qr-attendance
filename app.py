@@ -4,26 +4,30 @@ import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 from datetime import datetime
 
-# --- 구글 시트 연결 설정 ---
+# --- 구글 시트 연결 설정 (수정된 부분) ---
 
 
 def connect_google_sheet():
     scope = ["https://spreadsheets.google.com/feeds",
              "https://www.googleapis.com/auth/drive"]
-    creds = ServiceAccountCredentials.from_json_keyfile_name(
-        "secrets.json", scope)
+
+    # [수정 핵심] 파일 대신 Streamlit Secrets에서 직접 정보를 가져옵니다.
+    # 이렇게 하면 secrets.json 파일이 없어도 서버에서 잘 작동합니다.
+    creds_dict = dict(st.secrets)
+    creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
+
     client = gspread.authorize(creds)
 
-    # 사장님의 구글 시트 이름과 똑같이 맞춰주세요!
+    # 사장님이 만든 구글 시트 이름을 정확히 적으세요! (예: "출석부_DB")
     sheet = client.open("출석부_DB").sheet1
     return sheet
 
 
-# 에러 방지를 위해 예외 처리 추가
+# 아래 로직은 그대로 두시면 됩니다!
 try:
     sheet = connect_google_sheet()
 except Exception as e:
-    st.error(f"구글 시트 연결 실패! secrets.json 파일과 시트 이름을 확인하세요. \n에러: {e}")
+    st.error(f"구글 시트 연결 실패! 에러: {e}")
     st.stop()
 
 st.title("📱 온라인 연동 QR 출석 시스템")
