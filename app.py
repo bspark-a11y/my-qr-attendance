@@ -59,7 +59,7 @@ else:
     st.subheader("🛠️ QR 코드 생성")
 
     # [주의] 이 주소를 사장님의 '진짜' 배포 주소로 꼭 바꿔주세요!
-    base_url = "https://my-qr-attendance-jxye92bqfhseeax37kohj.streamlit.app"
+    base_url = "https://qr-check.streamlit.app"
 
     name = st.text_input("학생 이름 입력")
     if st.button("QR 생성"):
